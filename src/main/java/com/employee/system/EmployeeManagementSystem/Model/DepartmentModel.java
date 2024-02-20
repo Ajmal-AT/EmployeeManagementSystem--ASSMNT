@@ -12,4 +12,5 @@ public class DepartmentModel {
 
     @JsonProperty("department_head_name")
     private String departmentHeadName;
+
 }
