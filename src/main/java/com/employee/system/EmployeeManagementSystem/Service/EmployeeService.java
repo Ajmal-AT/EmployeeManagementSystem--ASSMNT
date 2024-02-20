@@ -4,6 +4,7 @@ import com.employee.system.EmployeeManagementSystem.Entity.Employee;
 import com.employee.system.EmployeeManagementSystem.Exception.EmployeeNotFoundException;
 import com.employee.system.EmployeeManagementSystem.Model.EmployeeModel;
 import com.employee.system.EmployeeManagementSystem.Repository.EmployeeRepository;
+import com.employee.system.EmployeeManagementSystem.org.modelMapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,7 +18,8 @@ public class EmployeeService implements EmployeeServiceIMPL{
     @Autowired
     EmployeeRepository employeeRepository;
 
-
+    @Autowired
+    ModelMapper modelMapper;
 
     public BigDecimal calculateYearlyBonusPercentage(EmployeeModel employee) {
         BigDecimal bonusPercentage = BigDecimal.ZERO;
@@ -59,6 +61,8 @@ public class EmployeeService implements EmployeeServiceIMPL{
         if(employee == null){
             throw new EmployeeNotFoundException("Sorry, this Employee could not be found");
         }
+
+        modelMapper.
 
 //        return (Employee) this.employeeRepository.findById(id).map((emp) -> {
 //            emp.setName(employeeModel.getName());
