@@ -10,7 +10,7 @@ public class DepartmentModel {
     @JsonProperty("name")
     private String name;
 
-    @JsonProperty("department_head_name")
-    private String departmentHeadName;
+    @JsonProperty("department_head_id")
+    private Long department;
 
 }

@@ -1,0 +1,27 @@
+// Employee --- JSON Schema
+{
+  "type": "object",
+  "properties": {
+    "name": { "type": "string" },
+    "date_of_birth": { "type": "string", "format": "date" },
+    "salary": { "type": "number" },
+    "address": { "type": "string" },
+    "role": { "type": "string" },
+    "joining_date": { "type": "string", "format": "date" },
+    "reporting_manager": { "type": "number" },
+    "department_id": { "type": "number" }
+  },
+  "required": ["name", "date_of_birth", "salary", "role", "joining_date"]
+}
+
+-----------------------------------------------------------------------------------
+
+// Department --- JSON Schema
+{
+  "type": "object",
+  "properties": {
+    "name": { "type": "string" },
+    "department_head_name": { "type": "string" }
+  },
+  "required": ["name"]
+}

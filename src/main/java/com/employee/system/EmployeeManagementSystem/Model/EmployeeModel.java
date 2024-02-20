@@ -1,5 +1,6 @@
 package com.employee.system.EmployeeManagementSystem.Model;
 
+import com.employee.system.EmployeeManagementSystem.Entity.Department;
 import com.employee.system.EmployeeManagementSystem.Entity.Employee;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
@@ -29,6 +30,9 @@ public class EmployeeModel {
     private LocalDate joiningDate;
 
     @JsonProperty("reporting_manager")
-    private String reportingManager;
+    private Long reportingManager;
+
+    @JsonProperty("department_id")
+    private Long department;
 
 }
