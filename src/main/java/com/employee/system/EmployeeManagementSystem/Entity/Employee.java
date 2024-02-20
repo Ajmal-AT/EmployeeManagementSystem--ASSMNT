@@ -12,7 +12,6 @@ import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @Entity
 @Table(name = "employee")
@@ -46,7 +45,7 @@ public class Employee {
 
     @JsonFormat(pattern = "yyyy-MM-dd")
     @Column(name = "joining_date")
-    private Date joiningDate;
+    private LocalDate joiningDate;
 
     @Column(name = "yearly_bonus_percentage")
     private BigDecimal yearlyBonusPercentage;
