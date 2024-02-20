@@ -33,9 +33,8 @@ public class CustomExceptionHandler {
         return error;
     }
 
-
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    @ExceptionHandler({EmployeeNotFoundException.class})
+    @ExceptionHandler({DepartmentNotFoundException.class})
     public Map<String, String> handleDepartmentNotFoundException(DepartmentNotFoundException ex) {
         Map<String, String> error = new HashMap();
         error.put("error", ex.getMessage());
