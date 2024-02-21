@@ -35,7 +35,7 @@ public class EmployeeController {
         return new ResponseEntity<>(employees, HttpStatus.FOUND);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/employee/{id}")
     public ResponseEntity<Employee> getEmployeeById(@PathVariable Long id) {
         Employee employee = employeeService.getEmployeeById(id);
         return new ResponseEntity<>(employee, HttpStatus.FOUND);

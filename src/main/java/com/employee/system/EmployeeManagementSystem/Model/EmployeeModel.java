@@ -32,7 +32,4 @@ public class EmployeeModel {
     @JsonProperty("reporting_manager")
     private Long reportingManager;
 
-    @JsonProperty("department_id")
-    private Long department;
-
 }

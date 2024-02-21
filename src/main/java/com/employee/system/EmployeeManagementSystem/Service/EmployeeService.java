@@ -29,25 +29,39 @@ public class EmployeeService implements EmployeeServiceIMPL{
     public BigDecimal calculateYearlyBonusPercentage(String role, BigDecimal salary) {
         BigDecimal bonusPercentage = BigDecimal.ZERO;
 
-        BigDecimal salary1 = salary;
-        String role1 = role;
-
         BigDecimal bonusPercentageForManager = new BigDecimal("0.10");
-        BigDecimal bonusPercentageForEmployee = new BigDecimal("0.05");
+        BigDecimal bonusPercentageForEmployee = new BigDecimal("0.07");
+        BigDecimal defaultBonusPercentage = new BigDecimal("0.04");
 
-        if ("Manager".equalsIgnoreCase(role)) {
-            bonusPercentage = salary.multiply(bonusPercentageForManager);
-        } else {
-            bonusPercentage = salary.multiply(bonusPercentageForEmployee);
+        switch(role.toLowerCase()) {
+            case "manager":
+            case "ceo":
+            case "hr manager":
+                bonusPercentage = salary.multiply(bonusPercentageForManager);
+                break;
+            case "jr software developer":
+            case "sr software developer":
+            case "front end developer":
+            case "software testing":
+            case "system engineer":
+            case "software developer intern":
+            case "accountant":
+            case "hr assistant":
+            case "sales and marketing teams":
+                bonusPercentage = salary.multiply(bonusPercentageForEmployee);
+                break;
+            default:
+                bonusPercentage = salary.multiply(defaultBonusPercentage);
+                break;
         }
 
         return bonusPercentage;
     }
 
     private void setDepartmentAndReportingManager(Employee employee, EmployeeModel employeeModel) {
-        if (employeeModel.getDepartment() != null) {
-            Department department = departmentRepository.findById(employeeModel.getDepartment())
-                    .orElseThrow(() -> new DepartmentNotFoundException("Department not found with id: " + employeeModel.getDepartment()));
+        if (employeeModel.getRole() != null) {
+            String role = setDepartment(employeeModel.getRole());
+            Department department = departmentRepository.findByName(role);
             employee.setDepartment(department);
         }
 
@@ -56,6 +70,42 @@ public class EmployeeService implements EmployeeServiceIMPL{
                     .orElseThrow(() -> new EmployeeNotFoundException("Employee not found with id: " + employeeModel.getReportingManager()));
             employee.setReportingManager(employee1);
         }
+    }
+
+    private String setDepartment(String role) {
+        String roles;
+        switch (role.toLowerCase()) {
+            case "jr software developer":
+            case "sr software developer":
+            case "front end developer":
+            case "software developer intern":
+                roles = "Software Development";
+                break;
+            case "software testing":
+                roles = "Quality Assurance";
+                break;
+            case "ceo":
+                roles = "Executive";
+                break;
+            case "hr manager":
+            case "hr assistant":
+                roles = "Human Resources";
+                break;
+            case "accountant":
+                roles = "Finance";
+                break;
+            case "system engineer":
+                roles = "Engineering";
+                break;
+            case "sales and marketing teams":
+                roles = "Sales and Marketing";
+                break;
+            default:
+                roles = "employee";
+                break;
+        }
+
+        return roles;
     }
 
     @Override
