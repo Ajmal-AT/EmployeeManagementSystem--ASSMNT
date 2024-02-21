@@ -8,7 +8,9 @@ import java.util.Optional;
 
 @Repository
 public interface DepartmentRepository extends JpaRepository<Department, Long> {
-
     Department findByName(String role);
 
+    boolean existsByName(String departmentName);
+
+    Department findByNameAndDepartmentHead(String departmentName, Long departmentHeadId);
 }

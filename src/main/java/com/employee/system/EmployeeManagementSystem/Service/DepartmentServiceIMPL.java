@@ -14,9 +14,10 @@ public interface DepartmentServiceIMPL {
 
     public Department updateDepartment(DepartmentModel departmentModel, Long id);
 
-    public Department moveEmployeeToAnotherDepartment(Long employeeId, Long newDepartmentId);
+    public Employee moveEmployeeToAnotherDepartment(Long employeeId, Long newDepartmentId);
 
     public List<Department> getAllDepartments();
 
     public List<Employee> getEmployeesUnderDepartment(Long departmentId);
+
 }
