@@ -7,7 +7,9 @@ import com.employee.system.EmployeeManagementSystem.Exception.EmployeeNotFoundEx
 import com.employee.system.EmployeeManagementSystem.Model.DepartmentModel;
 import com.employee.system.EmployeeManagementSystem.Repository.DepartmentRepository;
 import com.employee.system.EmployeeManagementSystem.Repository.EmployeeRepository;
-import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +23,9 @@ public class DepartmentService implements DepartmentServiceIMPL{
 
     @Autowired
     EmployeeRepository employeeRepository;
+
+    private static final int DEFAULT_PAGE_NUMBER = 0;
+    private static final int DEFAULT_PAGE_SIZE = 20;
 
     @Override
     public Department addDepartment(DepartmentModel departmentModel) {
@@ -53,7 +58,8 @@ public class DepartmentService implements DepartmentServiceIMPL{
     public String deleteDepartment(Long id) {
         String val = null;
         if(departmentRepository.existsById(id)) {
-            List<Employee> employees = employeeRepository.findAllByDepartment(id);
+            Pageable pageable = PageRequest.of(DEFAULT_PAGE_NUMBER, DEFAULT_PAGE_SIZE);
+            Page<Employee> employees = employeeRepository.findAllByDepartment(id, pageable);
             if(employees.isEmpty()) {
                 throw new EmployeeNotFoundException("Employees not found with department :"+ id);
             }
@@ -115,10 +121,12 @@ public class DepartmentService implements DepartmentServiceIMPL{
 
     @Override
     public List<Employee> getEmployeesUnderDepartment(Long departmentId) {
-        List<Employee> employee = employeeRepository.findAllByDepartment(departmentId);
-        if (employee.isEmpty()) {
-            throw new EmployeeNotFoundException("Employees not Found with Department : "+departmentId);
+        Pageable pageable = PageRequest.of(DEFAULT_PAGE_NUMBER, DEFAULT_PAGE_SIZE);
+        Page<Employee> employees = employeeRepository.findAllByDepartment(departmentId, pageable);
+        if (employees.isEmpty()) {
+            throw new EmployeeNotFoundException("No employees found under department with ID: " + departmentId);
         }
-        return employee;
+        return employees.getContent();
     }
+
 }

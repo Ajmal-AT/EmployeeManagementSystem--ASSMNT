@@ -2,7 +2,9 @@ package com.employee.system.EmployeeManagementSystem.Service;
 
 import com.employee.system.EmployeeManagementSystem.Entity.Department;
 import com.employee.system.EmployeeManagementSystem.Entity.Employee;
-import com.employee.system.EmployeeManagementSystem.Exception.DepartmentNotFoundException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import com.employee.system.EmployeeManagementSystem.Exception.EmployeeNotFoundException;
 import com.employee.system.EmployeeManagementSystem.Model.EmployeeModel;
 import com.employee.system.EmployeeManagementSystem.Repository.DepartmentRepository;
@@ -10,7 +12,6 @@ import com.employee.system.EmployeeManagementSystem.Repository.EmployeeRepositor
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -25,6 +26,9 @@ public class EmployeeService implements EmployeeServiceIMPL{
 
     @Autowired
     ModelMapper modelMapper;
+
+    private static final int DEFAULT_PAGE_NUMBER = 0;
+    private static final int DEFAULT_PAGE_SIZE = 20;
 
     public BigDecimal calculateYearlyBonusPercentage(String role, BigDecimal salary) {
         BigDecimal bonusPercentage = BigDecimal.ZERO;
@@ -41,6 +45,7 @@ public class EmployeeService implements EmployeeServiceIMPL{
                 break;
             case "jr software developer":
             case "sr software developer":
+            case "sr software developer head":
             case "front end developer":
             case "software testing":
             case "system engineer":
@@ -68,7 +73,10 @@ public class EmployeeService implements EmployeeServiceIMPL{
         if (employeeModel.getReportingManager() != null) {
             Employee employee1 = employeeRepository.findById(employeeModel.getReportingManager())
                     .orElseThrow(() -> new EmployeeNotFoundException("Employee not found with id: " + employeeModel.getReportingManager()));
-            employee.setReportingManager(employee1);
+            if(employee1.getRole().contains("head")){
+                employee.setReportingManager(employee1);
+            }
+            employee.setReportingManager(null);
         }
     }
 
@@ -77,6 +85,7 @@ public class EmployeeService implements EmployeeServiceIMPL{
         switch (role.toLowerCase()) {
             case "jr software developer":
             case "sr software developer":
+            case "sr software developer head":
             case "front end developer":
             case "software developer intern":
                 roles = "Software Development";
@@ -124,7 +133,9 @@ public class EmployeeService implements EmployeeServiceIMPL{
 
     @Override
     public List<Employee> getAllEmployees() {
-        return employeeRepository.findAll();
+        Pageable pageable = PageRequest.of(DEFAULT_PAGE_NUMBER, DEFAULT_PAGE_SIZE);
+        Page<Employee> employees = employeeRepository.findAll(pageable);
+        return employees.getContent();
     }
 
     @Override
@@ -155,11 +166,12 @@ public class EmployeeService implements EmployeeServiceIMPL{
     }
 
     @Override
-    public List<Employee> getAllByRole(String Role) {
-        List<Employee> employees = employeeRepository.findAllByRole(Role);
-        if(employees == null){
-            throw new EmployeeNotFoundException("Sorry, this Employee could not be found in the Role = "+ Role);
+    public List<Employee> getAllByRole(String role) {
+        Pageable pageable = PageRequest.of(DEFAULT_PAGE_NUMBER, DEFAULT_PAGE_SIZE);
+        Page<Employee> employees = employeeRepository.findAllByRole(role, pageable);
+        if (employees.isEmpty()) {
+            throw new EmployeeNotFoundException("No employees found with role: " + role);
         }
-        return employees;
+        return employees.getContent();
     }
 }
